@@ -55,11 +55,30 @@
     .section {
       margin-bottom: 30px;
     }
-    #result, #capacityResult, #singleShippingResult, #reverseCalcResult {
+    #result, #capacityResult, #singleShippingResult, #reverseCalcResult, #arrangementResult {
       font-size: 18px;
       color: #2e7d32;
       font-weight: bold;
       margin-top: 15px;
+    }
+    
+    .result-box {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #2e7d32;
+    }
+    
+    .arrangement-option {
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #e8f5e9;
+      border-radius: 5px;
+    }
+    
+    .best-option {
+      background-color: #c8e6c9;
+      border: 1px solid #81c784;
     }
     @media screen and (max-width: 600px) {
       .container {
@@ -108,12 +127,14 @@
   <input type="number" id="units" value="56">
   <label>עלות מכולה ($):</label>
   <input type="number" id="containerCost" value="3900">
+  <label>שילוח מהמפעל לנמל בסין ($):</label>
+  <input type="number" id="factoryToPort" value="1500">
   <label>שחרור ממכס כולל ($):</label>
   <input type="number" id="customsClearance" value="300">
-  <label>הובלה למחסן ($):</label>
-  <input type="number" id="localDelivery" value="100">
+  <label>שילוח מהנמל למחסן ($):</label>
+  <input type="number" id="localDelivery" value="1000">
   <label>מע"מ (%):</label>
-  <input type="number" id="vatRate" value="17">
+  <input type="number" id="vatRate" value="18">
 
   <button onclick="calculateTotal()">חשב עלות סופית ליחידה</button>
   <div id="result"></div>
@@ -128,14 +149,31 @@
   <label>נפח חבילה ב-CBM:</label>
   <input type="number" id="singleVolume" value="1" step="0.01">
   <label>שחרור ממכס לפריט ($):</label>
-  <input type="number" id="singleClearance" value="50">
+  <input type="number" id="singleClearance" value="300">
   <label>הובלה פנימית לפריט ($):</label>
-  <input type="number" id="singleDelivery" value="30">
+  <input type="number" id="singleDelivery" value="150">
   <label>מע"מ (%):</label>
-  <input type="number" id="singleVatRate" value="17">
+  <input type="number" id="singleVatRate" value="18">
 
   <button onclick="calculateSingleShipping()">חשב עלות כוללת לפריט</button>
   <div id="singleShippingResult"></div>
+</div>
+
+<div class="section">
+  <h3>סידור אופטימלי של קרטונים במכולה</h3>
+  <p>מחשבון זה עוזר לתכנן את האופן היעיל ביותר לסדר את הקרטונים במכולה ולהעריך כמה קרטונים יכולים להיכנס במציאות.</p>
+  
+  <label>פקטור ניצולת מציאותי:</label>
+  <select id="utilizationFactor">
+    <option value="0.90">90% (אידיאלי מאוד - קרטונים אחידים לחלוטין)</option>
+    <option value="0.85">85% (אידיאלי - קרטונים אחידים)</option>
+    <option value="0.80" selected>80% (טוב - סטנדרטי)</option>
+    <option value="0.75">75% (בסיסי - מעט מורכב)</option>
+    <option value="0.70">70% (מינימלי - מוצרים מורכבים או לא אחידים)</option>
+  </select>
+  
+  <button onclick="calculateOptimalArrangement()">חשב סידור אופטימלי</button>
+  <div id="arrangementResult" class="result-box"></div>
 </div>
 
   </div>  <script>
@@ -145,20 +183,37 @@
 
     function calculateCapacityFromDimensions() {
       const volume = updateContainerVolume();
-      const l = parseFloat(document.getElementById("length").value) / 100;
-      const w = parseFloat(document.getElementById("width").value) / 100;
-      const h = parseFloat(document.getElementById("height").value) / 100;
+      const length = parseFloat(document.getElementById("length").value);
+      const width = parseFloat(document.getElementById("width").value);
+      const height = parseFloat(document.getElementById("height").value);
+
+      if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+        document.getElementById("capacityResult").innerText = "נא להזין מידות תקינות (אורך, רוחב, גובה).";
+        return;
+      }
+
+      const l = length / 100;
+      const w = width / 100;
+      const h = height / 100;
       const productVolume = l * w * h;
       const unitsFit = Math.floor(volume / productVolume);
-      document.getElementById("capacityResult").innerText = נפח ליחידה: ${productVolume.toFixed(3)} CBM. נכנסות כ-${unitsFit} יחידות.;
+
+      document.getElementById("capacityResult").innerText = 
+        `נפח ליחידה: ${productVolume.toFixed(3)} CBM. נכנסות כ-${unitsFit} יחידות במכולה שנבחרה.`;
     }
 
     function calculateUnitVolumeFromTotal() {
       const volume = updateContainerVolume();
       const units = parseFloat(document.getElementById("unitsInContainer").value);
-      if (units > 0) {
+      if (!isNaN(units) && units > 0) {
         const unitVolume = volume / units;
-        document.getElementById("reverseCalcResult").innerText = נפח מוערך ליחידה: ${unitVolume.toFixed(3)} CBM;
+        const cubeRoot = Math.cbrt(unitVolume); // נניח קרטון קובייתי לחישוב
+        const sizeCm = (cubeRoot * 100).toFixed(1);
+        document.getElementById("reverseCalcResult").innerText =
+          `נפח מוערך ליחידה: ${unitVolume.toFixed(3)} CBM
+הערכת מידת אריזה: ${sizeCm} ס"מ × ${sizeCm} ס"מ × ${sizeCm} ס"מ`;
+      } else {
+        document.getElementById("reverseCalcResult").innerText = "נא להזין מספר יחידות חוקי (מעל 0).";
       }
     }
 
@@ -166,11 +221,28 @@
       const pc = parseFloat(document.getElementById('productCost').value);
       const units = parseInt(document.getElementById('units').value);
       const cont = parseFloat(document.getElementById('containerCost').value);
+      const factoryToPort = parseFloat(document.getElementById('factoryToPort').value);
       const clearance = parseFloat(document.getElementById('customsClearance').value);
       const delivery = parseFloat(document.getElementById('localDelivery').value);
       const vat = parseFloat(document.getElementById('vatRate').value) / 100;
-      const total = pc + (cont / units) + (clearance / units) + (delivery / units) + (pc * vat);
-      document.getElementById('result').innerText = 'עלות ליחידה בישראל: $' + total.toFixed(2);
+      // חישוב עלויות הבסיס ליחידה
+      const productPerUnit = pc;
+      const shippingPerUnit = (cont / units) + (factoryToPort / units);
+      const clearancePerUnit = (clearance / units);
+      const deliveryPerUnit = (delivery / units);
+      
+      // חישוב המע"מ על ערך המוצר + הובלה ימית + שחרור
+      const valueForVAT = productPerUnit + shippingPerUnit + clearancePerUnit;
+      const vatAmount = valueForVAT * vat;
+      
+      // סך הכל עלות ליחידה
+      const total = productPerUnit + shippingPerUnit + clearancePerUnit + deliveryPerUnit + vatAmount;
+      
+      let resultText = 'עלות ליחידה בישראל: $' + total.toFixed(2);
+      resultText += '<br><small>(כולל מע"מ של $' + vatAmount.toFixed(2) + 
+                   ' המחושב על ערך המוצר + הובלה ימית + שחרור)</small>';
+      
+      document.getElementById('result').innerHTML = resultText;
     }
 
     function calculateSingleShipping() {
@@ -180,8 +252,128 @@
       const clearance = parseFloat(document.getElementById("singleClearance").value);
       const delivery = parseFloat(document.getElementById("singleDelivery").value);
       const vat = parseFloat(document.getElementById("singleVatRate").value) / 100;
-      const total = pc + (rate * vol) + clearance + delivery + (pc * vat);
-      document.getElementById("singleShippingResult").innerText = סה"כ עלות לפריט בודד: $${total.toFixed(2)};
+      // חישוב עלויות הבסיס
+      const productCost = pc;
+      const shippingCost = rate * vol;
+      const clearanceCost = clearance;
+      const deliveryCost = delivery;
+      
+      // חישוב המע"מ על ערך המוצר + הובלה + שחרור
+      const valueForVAT = productCost + shippingCost + clearanceCost;
+      const vatAmount = valueForVAT * vat;
+      
+      // סך הכל
+      const total = productCost + shippingCost + clearanceCost + deliveryCost + vatAmount;
+      
+      let resultText = `סה"כ עלות לפריט בודד: $${total.toFixed(2)}`;
+      resultText += `<br><small>(כולל מע"מ של $${vatAmount.toFixed(2)} המחושב על ערך המוצר + הובלה + שחרור)</small>`;
+      
+      document.getElementById("singleShippingResult").innerHTML = resultText;
     }
+    
+    // המידות הפנימיות של המכולות במטרים
+    const containerDimensions = {
+      "33.2": { length: 5.89, width: 2.35, height: 2.39, name: "20ft Standard" },
+      "67": { length: 12.03, width: 2.35, height: 2.70, name: "40ft High Cube" },
+      "76": { length: 13.56, width: 2.35, height: 2.70, name: "45ft High Cube" }
+    };
+    
+    function calculateOptimalArrangement() {
+      const volume = updateContainerVolume();
+      const selectedContainer = document.getElementById("containerType").value;
+      const container = containerDimensions[selectedContainer];
+      
+      const length = parseFloat(document.getElementById("length").value) / 100; // המרה למטרים
+      const width = parseFloat(document.getElementById("width").value) / 100;
+      const height = parseFloat(document.getElementById("height").value) / 100;
+      const utilizationFactor = parseFloat(document.getElementById("utilizationFactor").value);
+      
+      if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+        document.getElementById("arrangementResult").innerHTML = "<span style='color:#d32f2f'>נא להזין מידות תקינות (אורך, רוחב, גובה).</span>";
+        return;
+      }
+      
+      // חישוב נפח הקרטון
+      const boxVolume = length * width * height;
+      
+      // חישוב כמות תיאורטית לפי נפח בלבד
+      const theoreticalUnits = Math.floor(volume / boxVolume);
+      
+      // חישוב כמות ריאליסטית עם פקטור ניצולת
+      const realUnits = Math.floor(theoreticalUnits * utilizationFactor);
+      
+      // בדיקת אפשרויות סידור שונות
+      const arrangementsResults = [];
+      
+      // כל האפשרויות לסידור הקרטון (6 אפשרויות)
+      const boxOrientations = [
+        { length: length, width: width, height: height, name: "אורך-רוחב-גובה" },
+        { length: length, width: height, height: width, name: "אורך-גובה-רוחב" },
+        { length: width, width: length, height: height, name: "רוחב-אורך-גובה" },
+        { length: width, width: height, height: length, name: "רוחב-גובה-אורך" },
+        { length: height, width: length, height: width, name: "גובה-אורך-רוחב" },
+        { length: height, width: width, height: length, name: "גובה-רוחב-אורך" }
+      ];
+      
+      // בדיקת כל אפשרות
+      boxOrientations.forEach(orientation => {
+        // כמה קרטונים נכנסים בכל כיוון
+        const boxesLength = Math.floor(container.length / orientation.length);
+        const boxesWidth = Math.floor(container.width / orientation.width);
+        const boxesHeight = Math.floor(container.height / orientation.height);
+        
+        // סה"כ קרטונים
+        const totalBoxes = boxesLength * boxesWidth * boxesHeight;
+        
+        // שטח רצפה תפוס
+        const floorAreaUsed = (boxesLength * orientation.length * boxesWidth * orientation.width) / (container.length * container.width) * 100;
+        
+        // יעילות ביחס למספר היחידות התיאורטי
+        const efficiency = (totalBoxes / theoreticalUnits * 100).toFixed(1);
+        
+        arrangementsResults.push({
+          name: orientation.name,
+          units: totalBoxes,
+          floorArea: floorAreaUsed.toFixed(1),
+          efficiency: efficiency,
+          boxesLength: boxesLength,
+          boxesWidth: boxesWidth, 
+          boxesHeight: boxesHeight
+        });
+      });
+      
+      // מיון התוצאות לפי הכמות הגדולה ביותר של יחידות
+      arrangementsResults.sort((a, b) => b.units - a.units);
+      
+      // הצגת התוצאות
+      let result = `<strong>נתוני מכולה:</strong> ${container.name} (${container.length.toFixed(2)}×${container.width.toFixed(2)}×${container.height.toFixed(2)} מטר)<br>`;
+      result += `<strong>מידות קרטון:</strong> ${(length*100).toFixed(0)}×${(width*100).toFixed(0)}×${(height*100).toFixed(0)} ס"מ<br>`;
+      result += `<strong>כמות תיאורטית לפי נפח בלבד:</strong> ${theoreticalUnits} יחידות<br>`;
+      result += `<strong>כמות ריאליסטית צפויה (${utilizationFactor * 100}% ניצולת):</strong> ${realUnits} יחידות<br><br>`;
+      
+      result += `<strong>סידורים אופטימליים:</strong><br>`;
+      
+      // הצג את שלושת הסידורים הטובים ביותר
+      const bestArrangements = arrangementsResults.slice(0, 3);
+      bestArrangements.forEach((arr, index) => {
+        const isBest = index === 0 ? "best-option" : "";
+        result += `<div class="arrangement-option ${isBest}">`;
+        result += `<strong>${arr.name}:</strong> ${arr.units} יחידות (${arr.efficiency}% ניצולת)<br>`;
+        result += `סידור: ${arr.boxesLength} × ${arr.boxesWidth} × ${arr.boxesHeight} קרטונים (אורך × רוחב × גובה)<br>`;
+        result += `${arr.floorArea}% ניצול שטח רצפה`;
+        result += `</div>`;
+      });
+      
+      result += `<br><strong>טיפים לסידור יעיל:</strong><br>`;
+      result += `- סדר את הקרטונים בהתאם לאפשרות הטובה ביותר שמוצגת למעלה<br>`;
+      result += `- התחל מהפינות ועבוד בשכבות מלאות ואחידות<br>`;
+      result += `- ודא שהשורה הראשונה מסודרת בצורה מושלמת ויציבה<br>`;
+      result += `- אל תשאיר חללים ריקים - מלא אותם בפריטים קטנים יותר<br>`;
+      result += `- אם אפשר, השאר מרווח של כ-10-15 ס"מ בקצה המכולה לנוחות הכנסה והוצאה<br>`;
+      result += `- זכור: קרטונים עמוסים עלולים להתעוות, לכן חשב על יציבות הערימה`;
+      
+      document.getElementById("arrangementResult").innerHTML = result;
+    }
+    
   </script></body>
 </html>
