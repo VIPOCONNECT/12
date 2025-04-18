@@ -1,72 +1,215 @@
-<!DOCTYPE html><html lang="he">
+<!DOCTYPE html>
+<html lang="he" id="htmlTag">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מחשבון עלויות שילוח</title>
+  <title>VIPO - מחשבון שילוח</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      direction: rtl;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #e3f2fd, #ffffff);
     }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    
+    body {
+      font-family: 'Rubik', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
     }
-    h2, h3 {
-      color: #1a237e;
-      margin-bottom: 15px;
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #0062cc, #0077cc);
+      color: white;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
+    
+    .branding {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    h1.logo {
+      color: white;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
       display: block;
+      letter-spacing: 0.5px;
     }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
+    
+    .site-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 8px;
+      display: inline-block;
+      padding: 6px 14px;
+      background-color: rgba(255,255,255,0.2);
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    
+    .site-link:hover {
+      background-color: #ff5722;
+      border-color: #ff5722;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .language-switcher {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .language-btn {
+      background-color: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.8);
+      padding: 8px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .language-btn:hover {
+      background-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+    
+    .language-btn.active {
+      background-color: #ff5722;
+      color: white;
+      border-color: #ff5722;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    body.en, body.zh {
+      direction: ltr;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto 40px;
+      padding: 0;
+      background-color: transparent;
+    }
+    
+    h3 {
+      color: #0077cc;
+      margin: 0 0 20px;
+      font-size: 22px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    h3:before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 22px;
+      background: #ff5722;
+      margin-left: 10px;
+      border-radius: 3px;
+    }
+    
+    label {
+      font-weight: 500;
+      display: block;
+      margin-top: 15px;
       font-size: 15px;
+      color: #444;
+      margin-bottom: 5px;
     }
-    button {
+    
+    input, select {
+      padding: 12px 16px;
+      margin: 8px 0 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
       width: 100%;
-      padding: 12px;
-      background: #1976d2;
+      font-family: 'Rubik', Arial, sans-serif;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    input:focus, select:focus {
+      border-color: #0077cc;
+      outline: none;
+      box-shadow: 0 2px 10px rgba(0, 119, 204, 0.2);
+    }
+    
+    button {
+      background: linear-gradient(135deg, #0077cc, #46aaff);
       color: white;
       border: none;
+      padding: 14px 22px;
       border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-weight: 600;
+      margin-top: 10px;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0, 119, 204, 0.3);
+      font-family: 'Rubik', Arial, sans-serif;
     }
+    
     button:hover {
-      background: #0d47a1;
+      background: linear-gradient(135deg, #0062cc, #0077cc);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 119, 204, 0.4);
     }
+    
     .section {
       margin-bottom: 30px;
+      padding: 25px 30px;
+      border-radius: 12px;
+      background-color: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    #result, #capacityResult, #singleShippingResult, #reverseCalcResult, #arrangementResult {
-      font-size: 18px;
-      color: #2e7d32;
-      font-weight: bold;
-      margin-top: 15px;
+    
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+    
+    #result, #singleShippingResult, #capacityResult, #reverseCalcResult, #arrangementResult {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #e4f2ff;
+      border-radius: 10px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border-left: 5px solid #46aaff;
     }
     
     .result-box {
-      background-color: #f5f5f5;
-      padding: 15px;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f0f7ff;
       border-radius: 8px;
-      border-left: 4px solid #2e7d32;
+      border-left: 5px solid #0077cc;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      font-size: 15px;
+      line-height: 1.6;
     }
     
     .arrangement-option {
@@ -80,6 +223,7 @@
       background-color: #c8e6c9;
       border: 1px solid #81c784;
     }
+    
     @media screen and (max-width: 600px) {
       .container {
         margin: 10px;
@@ -89,90 +233,151 @@
         font-size: 14px;
       }
     }
+    
+    h2 {
+      color: #0077cc;
+      margin: 0 0 30px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, #0077cc, #46aaff);
+      border-radius: 2px;
+    }
+    
+    .footer {
+      margin: 40px auto 0;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding: 25px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      max-width: 1000px;
+    }
+    
+    .footer a {
+      color: #0077cc;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-weight: 500;
+    }
+    
+    .footer a:hover {
+      background-color: #e6f3ff;
+      color: #0062cc;
+    }
   </style>
 </head>
 <body>
+  <div class="header-container">
+    <div class="branding">
+      <h1 class="logo" data-he="VIPO - מחשבון שילוח" data-en="VIPO - Shipping Calculator" data-zh="VIPO - 运输计算器"><span style="color:#ff5722;font-weight:700;">VIPO</span> - מחשבון שילוח</h1>
+      <a href="https://vipoconnect.github.io/6/" class="site-link" target="_blank" data-he="לאתר הראשי של VIPO" data-en="Visit VIPO Website" data-zh="访问 VIPO 网站">לאתר הראשי של VIPO</a>
+    </div>
+    <div class="language-switcher">
+      <button class="language-btn active" onclick="switchLanguage('he')" id="heBtn">עברית</button>
+      <button class="language-btn" onclick="switchLanguage('en')" id="enBtn">English</button>
+      <button class="language-btn" onclick="switchLanguage('zh')" id="zhBtn">中文</button>
+    </div>
+  </div>
   <div class="container">
-    <h2>מחשבון עלות סופית ליחידה + חישוב נפח מכולה</h2><div class="section">
-  <label>בחר סוג מכולה:</label>
+    <h2 data-he="מחשבון עלות סופית ליחידה + חישוב נפח מכולה" data-en="Container Shipping Cost Calculator + Volume Calculator" data-zh="集装箱运输成本计算器 + 体积计算器">מחשבון עלות סופית ליחידה + חישוב נפח מכולה</h2><div class="section">
+  <label data-key="container_type" data-he="בחר סוג מכולה:" data-en="Select container type:" data-zh="选择集装箱类型:">בחר סוג מכולה:</label>
   <select id="containerType" onchange="updateContainerVolume()">
     <option value="33.2">20ft - 33.2 CBM</option>
     <option value="67">40ft HQ - 67 CBM</option>
     <option value="76">45ft HQ - 76 CBM</option>
   </select>
 
-  <label>אורך קרטון (ס"מ):</label>
+  <label data-key="box_dimensions" data-he="מידות קרטון (ס"מ):" data-en="Box dimensions (cm):" data-zh="箱子尺寸 (厘米):">מידות קרטון (ס"מ):</label>
   <input type="number" id="length" value="109">
-  <label>רוחב קרטון (ס"מ):</label>
+  <label data-key="width" data-he="רוחב:" data-en="Width:" data-zh="宽度:">רוחב:</label>
   <input type="number" id="width" value="76">
-  <label>גובה קרטון (ס"מ):</label>
+  <label data-key="height" data-he="גובה:" data-en="Height:" data-zh="高度:">גובה:</label>
   <input type="number" id="height" value="120">
-  <label>משקל מוצר אחד (ק"ג):</label>
+  <label data-key="product_weight" data-he="משקל מוצר אחד (ק"ג):" data-en="Product weight (kg):" data-zh="产品重量 (公斤):">משקל מוצר אחד (ק"ג):</label>
   <input type="number" id="productWeight" value="83">
 
-  <button onclick="calculateCapacityFromDimensions()">חשב כמה יחידות נכנסות במכולה</button>
+  <button onclick="calculateCapacityFromDimensions()" data-key="calc_capacity" data-he="חשב כמה יחידות נכנסות במכולה" data-en="Calculate how many units fit in the container" data-zh="计算能装入集装箱的单位数量">חשב כמה יחידות נכנסות במכולה</button>
   <div id="capacityResult"></div>
 
-  <label>הזן כמה יחידות נכנסו בפועל:</label>
+  <label data-key="units_in_container" data-he="הזן כמה יחידות נכנסו בפועל:" data-en="Enter the number of units that actually fit:" data-zh="输入实际装入的单位数量:">הזן כמה יחידות נכנסו בפועל:</label>
   <input type="number" id="unitsInContainer" value="56">
-  <button onclick="calculateUnitVolumeFromTotal()">חשב נפח ליחידה</button>
+  <button onclick="calculateUnitVolumeFromTotal()" data-key="calc_volume" data-he="חשב נפח ליחידה" data-en="Calculate volume per unit" data-zh="计算每单位体积">חשב נפח ליחידה</button>
   <div id="reverseCalcResult"></div>
 </div>
 
 <div class="section">
-  <h3>חישוב עלות סופית ליחידה במכולה</h3>
-  <label>מחיר מוצר ($):</label>
+  <h3 data-key="unit_cost_title" data-he="חישוב עלות סופית ליחידה במכולה" data-en="Calculate final unit cost in container" data-zh="计算集装箱中的最终单位成本">חישוב עלות סופית ליחידה במכולה</h3>
+  <label data-key="product_cost" data-he="מחיר מוצר ($):" data-en="Product cost ($):" data-zh="产品成本 ($):">מחיר מוצר ($):</label>
   <input type="number" id="productCost" value="500">
-  <label>כמות יחידות במכולה:</label>
+  <label data-key="units_count" data-he="כמות יחידות במכולה:" data-en="Units count in container:" data-zh="集装箱中的单位数量:">כמות יחידות במכולה:</label>
   <input type="number" id="units" value="56">
-  <label>עלות מכולה ($):</label>
+  <label data-key="container_price" data-he="מחיר מכולה ($):" data-en="Container price ($):" data-zh="集装箱价格 ($):">מחיר מכולה ($):</label>
   <input type="number" id="containerCost" value="3900">
-  <label>שילוח מהמפעל לנמל בסין ($):</label>
+  <label data-key="factory_to_port" data-he="שילוח מהמפעל לנמל בסין ($):" data-en="Shipping from factory to port in China ($):" data-zh="从工厂到中国港口的运输 ($):">שילוח מהמפעל לנמל בסין ($):</label>
   <input type="number" id="factoryToPort" value="1500">
-  <label>שחרור ממכס כולל ($):</label>
+  <label data-key="customs_clearance" data-he="שחרור ממכס כולל ($):" data-en="Customs clearance ($):" data-zh="海关清关 ($):">שחרור ממכס כולל ($):</label>
   <input type="number" id="customsClearance" value="300">
-  <label>שילוח מהנמל למחסן ($):</label>
+  <label data-key="port_to_warehouse" data-he="שילוח מהנמל למחסן ($):" data-en="Shipping from port to warehouse ($):" data-zh="从港口到仓库的运输 ($):">שילוח מהנמל למחסן ($):</label>
   <input type="number" id="localDelivery" value="1000">
-  <label>מע"מ (%):</label>
+  <label data-key="vat_rate" data-he="מע"מ (%):" data-en="VAT (%):" data-zh="增值税 (%):">מע"מ (%):</label>
   <input type="number" id="vatRate" value="18">
 
-  <button onclick="calculateTotal()">חשב עלות סופית ליחידה</button>
+  <button onclick="calculateTotal()" data-key="calc_unit_cost" data-he="חשב עלות סופית ליחידה" data-en="Calculate final cost per unit" data-zh="计算每单位最终成本">חשב עלות סופית ליחידה</button>
   <div id="result"></div>
 </div>
 
 <div class="section">
-  <h3>חישוב עלות לפריט בודד (LCL)</h3>
-  <label>מחיר מוצר ($):</label>
+  <h3 data-key="single_cost_title" data-he="חישוב עלות לפריט בודד (LCL)" data-en="Calculate cost for single item (LCL)" data-zh="计算单件物品成本 (LCL)">חישוב עלות לפריט בודד (LCL)</h3>
+  <label data-key="product_cost" data-he="מחיר מוצר ($):" data-en="Product cost ($):" data-zh="产品成本 ($):">מחיר מוצר ($):</label>
   <input type="number" id="singleProductCost" value="500">
-  <label>עלות שילוח ל-CBM בודד ($):</label>
+  <label data-key="lcl_rate" data-he="עלות שילוח ל-CBM בודד ($):" data-en="LCL shipping rate ($):" data-zh="LCL运输费率 ($):">עלות שילוח ל-CBM בודד ($):</label>
   <input type="number" id="lclRate" value="200">
-  <label>נפח חבילה ב-CBM:</label>
+  <label data-key="package_volume" data-he="נפח חבילה ב-CBM:" data-en="Package volume in CBM:" data-zh="包裹体积 (CBM):">נפח חבילה ב-CBM:</label>
   <input type="number" id="singleVolume" value="1" step="0.01">
-  <label>שחרור ממכס לפריט ($):</label>
+  <label data-key="single_clearance" data-he="שחרור ממכס לפריט ($):" data-en="Customs clearance for single item ($):" data-zh="单件物品海关清关 ($):">שחרור ממכס לפריט ($):</label>
   <input type="number" id="singleClearance" value="300">
-  <label>הובלה פנימית לפריט ($):</label>
+  <label data-key="single_delivery" data-he="הובלה פנימית לפריט ($):" data-en="Domestic delivery for single item ($):" data-zh="单件物品国内运输 ($):">הובלה פנימית לפריט ($):</label>
   <input type="number" id="singleDelivery" value="150">
-  <label>מע"מ (%):</label>
+  <label data-key="vat_rate" data-he="מע"מ (%):" data-en="VAT (%):" data-zh="增值税 (%):">מע"מ (%):</label>
   <input type="number" id="singleVatRate" value="18">
 
-  <button onclick="calculateSingleShipping()">חשב עלות כוללת לפריט</button>
+  <button onclick="calculateSingleShipping()" data-key="calc_single_cost" data-he="חשב עלות סופית לפריט בודד" data-en="Calculate final cost for single item" data-zh="计算单件物品的最终成本">חשב עלות סופית לפריט בודד</button>
   <div id="singleShippingResult"></div>
 </div>
 
 <div class="section">
-  <h3>סידור אופטימלי של קרטונים במכולה</h3>
-  <p>מחשבון זה עוזר לתכנן את האופן היעיל ביותר לסדר את הקרטונים במכולה ולהעריך כמה קרטונים יכולים להיכנס במציאות.</p>
+  <h3 data-key="arrangement_title" data-he="סידור אופטימלי של קרטונים במכולה" data-en="Optimal arrangement of boxes in container" data-zh="箱子在集装箱中的最佳排列">סידור אופטימלי של קרטונים במכולה</h3>
+  <p data-key="arrangement_desc" data-he="מחשבון זה עוזר לתכנן את האופן היעיל ביותר לסדר את הקרטונים במכולה ולהעריך כמה קרטונים יכולים להיכנס במציאות." data-en="This calculator helps plan the most efficient way to arrange boxes in a container and estimate how many boxes can fit in reality." data-zh="此计算器有助于规划在集装箱中排列箱子的最有效方式，并估算实际上可以装入多少箱子。">מחשבון זה עוזר לתכנן את האופן היעיל ביותר לסדר את הקרטונים במכולה ולהעריך כמה קרטונים יכולים להיכנס במציאות.</p>
   
-  <label>פקטור ניצולת מציאותי:</label>
+  <label data-key="utilization_factor" data-he="פקטור ניצולת מציאותי:" data-en="Realistic utilization factor:" data-zh="现实利用率因子:">פקטור ניצולת מציאותי:</label>
   <select id="utilizationFactor">
-    <option value="0.90">90% (אידיאלי מאוד - קרטונים אחידים לחלוטין)</option>
-    <option value="0.85">85% (אידיאלי - קרטונים אחידים)</option>
-    <option value="0.80" selected>80% (טוב - סטנדרטי)</option>
-    <option value="0.75">75% (בסיסי - מעט מורכב)</option>
-    <option value="0.70">70% (מינימלי - מוצרים מורכבים או לא אחידים)</option>
+    <option value="0.90" data-key="utilization_90">90% (אידיאלי מאוד - קרטונים אחידים לחלוטין)</option>
+    <option value="0.85" data-key="utilization_85">85% (אידיאלי - קרטונים אחידים)</option>
+    <option value="0.80" selected data-key="utilization_80">80% (טוב - סטנדרטי)</option>
+    <option value="0.75" data-key="utilization_75">75% (בסיסי - מעט מורכב)</option>
+    <option value="0.70" data-key="utilization_70">70% (מינימלי - מוצרים מורכבים או לא אחידים)</option>
   </select>
   
-  <button onclick="calculateOptimalArrangement()">חשב סידור אופטימלי</button>
+  <button onclick="calculateOptimalArrangement()" data-key="calc_arrangement" data-he="חשב סידור אופטימלי" data-en="Calculate optimal arrangement" data-zh="计算最佳排列">חשב סידור אופטימלי</button>
   <div id="arrangementResult" class="result-box"></div>
 </div>
 
@@ -375,5 +580,217 @@
       document.getElementById("arrangementResult").innerHTML = result;
     }
     
-  </script></body>
+  </script>
+  <script>
+    // מערכת החלפת שפה
+    const translations = {
+      // כותרות
+      "container_title": {
+        "he": "מחשבון עלות סופית ליחידה + חישוב נפח מכולה",
+        "en": "Container Shipping Cost Calculator + Volume Calculator"
+      },
+      // תוויות בסקציית חישוב נפח מכולה
+      "container_type": {
+        "he": "בחר סוג מכולה:",
+        "en": "Select container type:"
+      },
+      "box_length": {
+        "he": "אורך קרטון (ס\"מ):",
+        "en": "Box length (cm):"
+      },
+      "box_width": {
+        "he": "רוחב קרטון (ס\"מ):",
+        "en": "Box width (cm):"
+      },
+      "box_height": {
+        "he": "גובה קרטון (ס\"מ):",
+        "en": "Box height (cm):"
+      },
+      "product_weight": {
+        "he": "משקל מוצר אחד (ק\"ג):",
+        "en": "Product weight (kg):"
+      },
+      "calc_capacity": {
+        "he": "חשב כמה יחידות נכנסות במכולה",
+        "en": "Calculate how many units fit in container"
+      },
+      "units_in_container": {
+        "he": "הזן כמה יחידות נכנסו בפועל:",
+        "en": "Enter actual units in container:"
+      },
+      "calc_volume": {
+        "he": "חשב נפח ליחידה",
+        "en": "Calculate volume per unit"
+      },
+      // תוויות בסקציית חישוב עלות סופית ליחידה במכולה
+      "unit_cost_title": {
+        "he": "חישוב עלות סופית ליחידה במכולה",
+        "en": "Calculate final unit cost in container"
+      },
+      "product_cost": {
+        "he": "מחיר מוצר ($):",
+        "en": "Product cost ($):"
+      },
+      "units_count": {
+        "he": "כמות יחידות במכולה:",
+        "en": "Number of units in container:"
+      },
+      "container_cost": {
+        "he": "עלות מכולה ($):",
+        "en": "Container cost ($):"
+      },
+      "factory_to_port": {
+        "he": "שילוח מהמפעל לנמל בסין ($):",
+        "en": "Factory to port shipping in China ($):"
+      },
+      "customs_clearance": {
+        "he": "שחרור ממכס כולל ($):",
+        "en": "Customs clearance total ($):"
+      },
+      "port_to_warehouse": {
+        "he": "שילוח מהנמל למחסן ($):",
+        "en": "Port to warehouse shipping ($):"
+      },
+      "vat_rate": {
+        "he": "מע\"מ (%):",
+        "en": "VAT (%):"
+      },
+      "calc_unit_cost": {
+        "he": "חשב עלות סופית ליחידה",
+        "en": "Calculate final unit cost"
+      },
+      // תוויות בסקציית חישוב עלות לפריט בודד
+      "single_cost_title": {
+        "he": "חישוב עלות לפריט בודד (LCL)",
+        "en": "Calculate cost for single item (LCL)"
+      },
+      "lcl_rate": {
+        "he": "עלות שילוח ל-CBM בודד ($):",
+        "en": "Shipping cost per CBM ($):"
+      },
+      "package_volume": {
+        "he": "נפח חבילה ב-CBM:",
+        "en": "Package volume in CBM:"
+      },
+      "single_clearance": {
+        "he": "שחרור ממכס לפריט ($):",
+        "en": "Customs clearance per item ($):"
+      },
+      "single_delivery": {
+        "he": "הובלה פנימית לפריט ($):",
+        "en": "Domestic delivery per item ($):"
+      },
+      "calc_single_cost": {
+        "he": "חשב עלות כוללת לפריט",
+        "en": "Calculate total item cost"
+      },
+      // תוויות בסקציית סידור אופטימלי
+      "arrangement_title": {
+        "he": "סידור אופטימלי של קרטונים במכולה",
+        "en": "Optimal arrangement of boxes in container"
+      },
+      "arrangement_desc": {
+        "he": "מחשבון זה עוזר לתכנן את האופן היעיל ביותר לסדר את הקרטונים במכולה ולהעריך כמה קרטונים יכולים להיכנס במציאות.",
+        "en": "This calculator helps plan the most efficient way to arrange boxes in a container and estimate how many boxes can fit in reality."
+      },
+      "utilization_factor": {
+        "he": "פקטור ניצולת מציאותי:",
+        "en": "Realistic utilization factor:"
+      },
+      "calc_arrangement": {
+        "he": "חשב סידור אופטימלי",
+        "en": "Calculate optimal arrangement"
+      },
+      // ערכי בחירה לפקטור ניצולת
+      "utilization_90": {
+        "he": "90% (אידיאלי מאוד - קרטונים אחידים לחלוטין)",
+        "en": "90% (Excellent - completely uniform boxes)"
+      },
+      "utilization_85": {
+        "he": "85% (אידיאלי - קרטונים אחידים)",
+        "en": "85% (Ideal - uniform boxes)"
+      },
+      "utilization_80": {
+        "he": "80% (טוב - סטנדרטי)",
+        "en": "80% (Good - standard)"
+      },
+      "utilization_75": {
+        "he": "75% (בסיסי - מעט מורכב)",
+        "en": "75% (Basic - slightly complex)"
+      },
+      "utilization_70": {
+        "he": "70% (מינימלי - מוצרים מורכבים או לא אחידים)",
+        "en": "70% (Minimal - complex or non-uniform products)"
+      }
+    };
+    
+    // פונקציה להחלפת שפה
+    function switchLanguage(lang) {
+      const htmlTag = document.getElementById('htmlTag');
+      const heBtn = document.getElementById('heBtn');
+      const enBtn = document.getElementById('enBtn');
+      const zhBtn = document.getElementById('zhBtn');
+      
+      // עדכון כפתורי החלפת שפה
+      // הסרת כל המחלקות פעילות
+      heBtn.classList.remove('active');
+      enBtn.classList.remove('active');
+      zhBtn.classList.remove('active');
+      document.body.classList.remove('en', 'zh');
+      
+      // הגדרת השפה הנבחרת
+      if (lang === 'he') {
+        htmlTag.lang = 'he';
+        heBtn.classList.add('active');
+      } else if (lang === 'zh') {
+        htmlTag.lang = 'zh';
+        document.body.classList.add('zh');
+        zhBtn.classList.add('active');
+      } else { // en ברירת מחדל
+        htmlTag.lang = 'en';
+        document.body.classList.add('en');
+        enBtn.classList.add('active');
+      }
+      
+      // עדכון כל התוויות והטקסטים
+      const elements = document.querySelectorAll('[data-he][data-en]');
+      elements.forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+      
+      // עדכון כל התוויות
+      const labels = document.querySelectorAll('label');
+      labels.forEach(label => {
+        const key = label.getAttribute('data-key');
+        if (key && translations[key] && translations[key][lang]) {
+          label.textContent = translations[key][lang];
+        }
+      });
+      
+      // עדכון כפתורים
+      const buttons = document.querySelectorAll('button[data-key]');
+      buttons.forEach(button => {
+        const key = button.getAttribute('data-key');
+        if (key && translations[key] && translations[key][lang]) {
+          button.textContent = translations[key][lang];
+        }
+      });
+      
+      // עדכון אפשרויות בתיבות בחירה
+      const options = document.querySelectorAll('option[data-key]');
+      options.forEach(option => {
+        const key = option.getAttribute('data-key');
+        if (key && translations[key] && translations[key][lang]) {
+          option.textContent = translations[key][lang];
+        }
+      });
+    }
+    
+  </script>
+
+  <div class="footer">
+    <p data-he="&copy; 2023 VIPO כל הזכויות שמורות" data-en="&copy; 2023 VIPO All Rights Reserved" data-zh="&copy; 2023 VIPO 版权所有">&copy; 2023 VIPO כל הזכויות שמורות</p>
+    <a href="https://vipoconnect.github.io/6/" target="_blank" data-he="עוד שירותים מבית VIPO" data-en="More services by VIPO" data-zh="VIPO 提供的更多服务">עוד שירותים מבית VIPO</a>
+  </div>
+</body>
 </html>
