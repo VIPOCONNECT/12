@@ -33,6 +33,7 @@
       color: white;
       margin-bottom: 30px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
     }
     
     .branding {
@@ -47,6 +48,10 @@
       font-weight: 700;
       display: block;
       letter-spacing: 0.5px;
+    }
+    
+    .logo-text {
+      white-space: nowrap;
     }
     
     .site-link {
@@ -84,6 +89,23 @@
       transition: all 0.3s ease;
       font-weight: 500;
       font-size: 14px;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .language-btn {
+        background-color: transparent;
+        color: #0077cc;
+        border: 1px solid #e0e0e0;
+        padding: 6px 12px;
+        font-size: 13px;
+        margin: 0 2px;
+      }
+      
+      .language-btn.active {
+        background-color: #0077cc;
+        color: white;
+        border-color: #0077cc;
+      }
     }
     
     .language-btn:hover {
@@ -224,12 +246,99 @@
       border: 1px solid #81c784;
     }
     
-    @media screen and (max-width: 600px) {
-      .container {
-        margin: 10px;
-        padding: 15px;
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 0;
       }
-      input, select, button {
+      
+      .header-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 15px;
+        text-align: right;
+        justify-content: space-between;
+        position: relative;
+      }
+      
+      .branding {
+        margin-bottom: 0;
+        align-items: flex-end;
+        flex: 1;
+        text-align: right;
+      }
+      
+      .logo {
+        font-size: 22px;
+        margin-bottom: 5px;
+      }
+      
+      .site-link {
+        font-size: 13px;
+        margin-top: 0;
+        padding: 4px 10px;
+      }
+      
+      .language-switcher {
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        position: absolute;
+        bottom: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255,255,255,0.9);
+        padding: 5px;
+        border-radius: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 100;
+      }
+      
+      .container {
+        padding: 0 15px;
+        margin-top: 30px;
+      }
+      
+      h2 {
+        font-size: 24px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      
+      h2:after {
+        width: 60px;
+        height: 3px;
+      }
+      
+      h3 {
+        font-size: 18px;
+      }
+      
+      h3:before {
+        height: 18px;
+      }
+      
+      .section {
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      
+      label {
+        font-size: 14px;
+      }
+      
+      input, select {
+        padding: 10px;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+      
+      button {
+        padding: 12px 18px;
+        font-size: 15px;
+      }
+      
+      #result, #singleShippingResult, #capacityResult, #reverseCalcResult, #arrangementResult {
+        padding: 15px;
         font-size: 14px;
       }
     }
@@ -288,7 +397,7 @@
 <body>
   <div class="header-container">
     <div class="branding">
-      <h1 class="logo" data-he="VIPO - מחשבון שילוח" data-en="VIPO - Shipping Calculator" data-zh="VIPO - 运输计算器"><span style="color:#ff5722;font-weight:700;">VIPO</span> - מחשבון שילוח</h1>
+      <h1 class="logo" data-he="VIPO - מחשבון שילוח" data-en="VIPO - Shipping Calculator" data-zh="VIPO - 运输计算器"><span style="color:#ff5722;font-weight:700;">VIPO</span><span class="logo-text"> - מחשבון שילוח</span></h1>
       <a href="https://vipoconnect.github.io/6/" class="site-link" target="_blank" data-he="לאתר הראשי של VIPO" data-en="Visit VIPO Website" data-zh="访问 VIPO 网站">לאתר הראשי של VIPO</a>
     </div>
     <div class="language-switcher">
