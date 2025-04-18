@@ -1,112 +1,156 @@
 <!DOCTYPE html><html lang="he">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>מחשבון עלויות שילוח</title>
   <style>
     body {
       direction: rtl;
-      font-family: Arial;
-      margin: 40px;
-      background: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e3f2fd, #ffffff);
     }
     .container {
-      max-width: 750px;
+      max-width: 800px;
+      margin: 20px auto;
       background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
-    input, label, select {
+    h2, h3 {
+      color: #1a237e;
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
       display: block;
-      width: 100%;
-      margin-bottom: 10px;
     }
     input, select {
-      padding: 8px;
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 15px;
     }
     button {
-      padding: 10px;
-      background: #25a944;
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0d47a1;
+    }
+    .section {
+      margin-bottom: 30px;
     }
     #result, #capacityResult, #singleShippingResult, #reverseCalcResult {
-      margin-top: 20px;
       font-size: 18px;
+      color: #2e7d32;
       font-weight: bold;
-      color: #333;
+      margin-top: 15px;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+      input, select, button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>מחשבון עלות סופית ליחידה + חישוב נפח מכולה</h2><label>בחר סוג מכולה:
+    <h2>מחשבון עלות סופית ליחידה + חישוב נפח מכולה</h2><div class="section">
+  <label>בחר סוג מכולה:</label>
   <select id="containerType" onchange="updateContainerVolume()">
     <option value="33.2">20ft - 33.2 CBM</option>
     <option value="67">40ft HQ - 67 CBM</option>
     <option value="76">45ft HQ - 76 CBM</option>
   </select>
-</label>
 
-<label>אורך קרטון (ס"מ): <input type="number" id="length" value="109"></label>
-<label>רוחב קרטון (ס"מ): <input type="number" id="width" value="76"></label>
-<label>גובה קרטון (ס"מ): <input type="number" id="height" value="120"></label>
-<label>משקל מוצר אחד (ק"ג): <input type="number" id="productWeight" value="83"></label>
+  <label>אורך קרטון (ס"מ):</label>
+  <input type="number" id="length" value="109">
+  <label>רוחב קרטון (ס"מ):</label>
+  <input type="number" id="width" value="76">
+  <label>גובה קרטון (ס"מ):</label>
+  <input type="number" id="height" value="120">
+  <label>משקל מוצר אחד (ק"ג):</label>
+  <input type="number" id="productWeight" value="83">
 
-<button onclick="calculateCapacityFromDimensions()">חשב כמה יחידות נכנסות במכולה</button>
-<div id="capacityResult"></div>
+  <button onclick="calculateCapacityFromDimensions()">חשב כמה יחידות נכנסות במכולה</button>
+  <div id="capacityResult"></div>
 
-<hr>
+  <label>הזן כמה יחידות נכנסו בפועל:</label>
+  <input type="number" id="unitsInContainer" value="56">
+  <button onclick="calculateUnitVolumeFromTotal()">חשב נפח ליחידה</button>
+  <div id="reverseCalcResult"></div>
+</div>
 
-<label>או הזן כמה יחידות נכנסו במכולה בפועל (לדוגמה 56): <input type="number" id="unitsInContainer" value="56"></label>
-<button onclick="calculateUnitVolumeFromTotal()">חשב מהו נפח ליחידה</button>
-<div id="reverseCalcResult"></div>
+<div class="section">
+  <h3>חישוב עלות סופית ליחידה במכולה</h3>
+  <label>מחיר מוצר ($):</label>
+  <input type="number" id="productCost" value="500">
+  <label>כמות יחידות במכולה:</label>
+  <input type="number" id="units" value="56">
+  <label>עלות מכולה ($):</label>
+  <input type="number" id="containerCost" value="3900">
+  <label>שחרור ממכס כולל ($):</label>
+  <input type="number" id="customsClearance" value="300">
+  <label>הובלה למחסן ($):</label>
+  <input type="number" id="localDelivery" value="100">
+  <label>מע"מ (%):</label>
+  <input type="number" id="vatRate" value="17">
 
-<hr>
+  <button onclick="calculateTotal()">חשב עלות סופית ליחידה</button>
+  <div id="result"></div>
+</div>
 
-<label>מחיר מוצר ($): <input type="number" id="productCost" value="500"></label>
-<label>כמות יחידות במכולה: <input type="number" id="units" value="56"></label>
-<label>עלות מכולה ($): <input type="number" id="containerCost" value="3900"></label>
-<label>שחרור ממכס כולל ($): <input type="number" id="customsClearance" value="300"></label>
-<label>הובלה למחסן ($): <input type="number" id="localDelivery" value="100"></label>
-<label>מע"מ (%): <input type="number" id="vatRate" value="17"></label>
+<div class="section">
+  <h3>חישוב עלות לפריט בודד (LCL)</h3>
+  <label>מחיר מוצר ($):</label>
+  <input type="number" id="singleProductCost" value="500">
+  <label>עלות שילוח ל-CBM בודד ($):</label>
+  <input type="number" id="lclRate" value="200">
+  <label>נפח חבילה ב-CBM:</label>
+  <input type="number" id="singleVolume" value="1" step="0.01">
+  <label>שחרור ממכס לפריט ($):</label>
+  <input type="number" id="singleClearance" value="50">
+  <label>הובלה פנימית לפריט ($):</label>
+  <input type="number" id="singleDelivery" value="30">
+  <label>מע"מ (%):</label>
+  <input type="number" id="singleVatRate" value="17">
 
-<button onclick="calculateTotal()">חשב עלות סופית ליחידה</button>
-<div id="result"></div>
-
-<hr>
-
-<h3>חישוב עלות משלוח לפריט בודד (LCL)</h3>
-<label>מחיר מוצר ($): <input type="number" id="singleProductCost" value="500"></label>
-<label>עלות שילוח ל-CBM בודד ($): <input type="number" id="lclRate" value="200"></label>
-<label>נפח חבילה ב-CBM: <input type="number" id="singleVolume" value="1" step="0.01"></label>
-<label>שחרור ממכס לפריט ($): <input type="number" id="singleClearance" value="50"></label>
-<label>הובלה פנימית לפריט ($): <input type="number" id="singleDelivery" value="30"></label>
-<label>מע"מ (%): <input type="number" id="singleVatRate" value="17"></label>
-
-<button onclick="calculateSingleShipping()">חשב עלות משלוח לפריט בודד</button>
-<div id="singleShippingResult"></div>
+  <button onclick="calculateSingleShipping()">חשב עלות כוללת לפריט</button>
+  <div id="singleShippingResult"></div>
+</div>
 
   </div>  <script>
     function updateContainerVolume() {
-      const selected = document.getElementById("containerType").value;
-      return parseFloat(selected);
+      return parseFloat(document.getElementById("containerType").value);
     }
 
     function calculateCapacityFromDimensions() {
       const volume = updateContainerVolume();
-      const length = parseFloat(document.getElementById("length").value) / 100;
-      const width = parseFloat(document.getElementById("width").value) / 100;
-      const height = parseFloat(document.getElementById("height").value) / 100;
-
-      const productVolume = length * width * height;
+      const l = parseFloat(document.getElementById("length").value) / 100;
+      const w = parseFloat(document.getElementById("width").value) / 100;
+      const h = parseFloat(document.getElementById("height").value) / 100;
+      const productVolume = l * w * h;
       const unitsFit = Math.floor(volume / productVolume);
-
-      document.getElementById("capacityResult").innerText = נפח ליחידה: ${productVolume.toFixed(3)} CBM. נכנסות כ-${unitsFit} יחידות במכולה.;
+      document.getElementById("capacityResult").innerText = נפח ליחידה: ${productVolume.toFixed(3)} CBM. נכנסות כ-${unitsFit} יחידות.;
     }
 
     function calculateUnitVolumeFromTotal() {
@@ -114,41 +158,30 @@
       const units = parseFloat(document.getElementById("unitsInContainer").value);
       if (units > 0) {
         const unitVolume = volume / units;
-        document.getElementById("reverseCalcResult").innerText = נפח מוערך לכל יחידה: ${unitVolume.toFixed(3)} CBM;
-      } else {
-        document.getElementById("reverseCalcResult").innerText = "נא להזין מספר יחידות תקני.";
+        document.getElementById("reverseCalcResult").innerText = נפח מוערך ליחידה: ${unitVolume.toFixed(3)} CBM;
       }
     }
 
     function calculateTotal() {
-      const productCost = parseFloat(document.getElementById('productCost').value);
+      const pc = parseFloat(document.getElementById('productCost').value);
       const units = parseInt(document.getElementById('units').value);
-      const containerCost = parseFloat(document.getElementById('containerCost').value);
-      const customsClearance = parseFloat(document.getElementById('customsClearance').value);
-      const localDelivery = parseFloat(document.getElementById('localDelivery').value);
-      const vatRate = parseFloat(document.getElementById('vatRate').value) / 100;
-
-      const shippingPerUnit = containerCost / units;
-      const customsPerUnit = customsClearance / units;
-      const deliveryPerUnit = localDelivery / units;
-      const vat = productCost * vatRate;
-
-      const total = productCost + shippingPerUnit + customsPerUnit + deliveryPerUnit + vat;
-
-      document.getElementById('result').innerText = 'עלות סופית ליחידה בישראל: $' + total.toFixed(2);
+      const cont = parseFloat(document.getElementById('containerCost').value);
+      const clearance = parseFloat(document.getElementById('customsClearance').value);
+      const delivery = parseFloat(document.getElementById('localDelivery').value);
+      const vat = parseFloat(document.getElementById('vatRate').value) / 100;
+      const total = pc + (cont / units) + (clearance / units) + (delivery / units) + (pc * vat);
+      document.getElementById('result').innerText = 'עלות ליחידה בישראל: $' + total.toFixed(2);
     }
 
     function calculateSingleShipping() {
-      const productCost = parseFloat(document.getElementById("singleProductCost").value);
+      const pc = parseFloat(document.getElementById("singleProductCost").value);
       const rate = parseFloat(document.getElementById("lclRate").value);
-      const volume = parseFloat(document.getElementById("singleVolume").value);
+      const vol = parseFloat(document.getElementById("singleVolume").value);
       const clearance = parseFloat(document.getElementById("singleClearance").value);
       const delivery = parseFloat(document.getElementById("singleDelivery").value);
-      const vatRate = parseFloat(document.getElementById("singleVatRate").value) / 100;
-
-      const vat = productCost * vatRate;
-      const total = productCost + (rate * volume) + clearance + delivery + vat;
-      document.getElementById("singleShippingResult").innerText = עלות כוללת לפריט בודד כולל כל העלויות: $${total.toFixed(2)};
+      const vat = parseFloat(document.getElementById("singleVatRate").value) / 100;
+      const total = pc + (rate * vol) + clearance + delivery + (pc * vat);
+      document.getElementById("singleShippingResult").innerText = סה"כ עלות לפריט בודד: $${total.toFixed(2)};
     }
   </script></body>
 </html>
